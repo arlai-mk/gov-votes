@@ -4,13 +4,13 @@
   "description": "Experiment with simple Moonkitt concepts.",
   "main": "index.js",
   "scripts": {
-    "main": "ts-node main.ts",
+    "main": "esrun main.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "arlai",
   "license": "ISC",
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "esrun": "^3.2.26"
   },
   "dependencies": {
     "moonkittjs": "^0.0.3"
