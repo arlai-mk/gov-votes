@@ -1,11 +1,10 @@
 import { getAllDelegations } from "./cosmos-modules/staking"
+import { getAllVotes } from "./cosmos-modules/gov"
 
 const runAll = async (): Promise<void> => {
-  const cosmosAddress = "cosmos1yy6lv2fr7lg7mktl04pyz9y5g6yevgl95yffnj"
+  const votes = await getAllVotes(922)
 
-  const delegations = await getAllDelegations(cosmosAddress)
-
-  console.log(delegations)
+  console.log(votes)
 }
 
 runAll()
