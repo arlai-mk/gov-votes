@@ -1,6 +1,6 @@
 import type { PageRequest, PageResponse } from "moonkittjs/dist/codegen/cosmos/base/query/v1beta1/pagination"
 
-const RPC_URL = "https://rpc-cosmoshub.moonkitt.com"
+const RPC_URL = "ENTER_RPC_HERE"
 
 export const getRpcClient = async () => {
   const cosmos = (await import("moonkittjs")).cosmos
