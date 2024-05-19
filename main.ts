@@ -31,10 +31,35 @@ const runAll = async (type: "fast" | "slow"): Promise<void> => {
     result = await Promise.all(ids.map((id) => displayVotesForPropFast(id, delegationsByDelegator)))
   } else if (type === "slow") {
     const validatorsByValoper = await getAllValidatorsByValoper()
+    displayCSVHeaderSlow(true)
     result = await Promise.all(ids.map((id) => displayVotesForPropSlow(id, undefined, validatorsByValoper)))
   }
 
   console.error(result)
+}
+
+const displayCSVHeaderSlow = async (splitByValidator: boolean) => {
+  if (splitByValidator) {
+    console.log(
+      "Prop ID" +
+        CSV_SEPARATOR +
+        "Delegator" +
+        CSV_SEPARATOR +
+        "Validator address" +
+        CSV_SEPARATOR +
+        "Validator moniker" +
+        CSV_SEPARATOR +
+        "Delegated VP" +
+        CSV_SEPARATOR +
+        "Status" +
+        CSV_SEPARATOR +
+        "Voting Power" +
+        CSV_SEPARATOR +
+        "Voting Option" +
+        CSV_SEPARATOR +
+        "Is Self Bond?"
+    )
+  }
 }
 
 // If you want to show the detail of each vote "per delegator / validator pair"
@@ -60,6 +85,9 @@ const displayVotesForPropSlow = async (
         }
 
         for (const option of vote.options) {
+          if (+option.weight < 1) {
+            console.error("Weighted vote: " + vote.voter + ". Weight: " + option.weight)
+          }
           console.log(
             id +
               CSV_SEPARATOR +
@@ -69,6 +97,9 @@ const displayVotesForPropSlow = async (
               CSV_SEPARATOR +
               validatorsByValoper[delegation.delegation.validatorAddress].description.moniker +
               CSV_SEPARATOR +
+              (+validatorsByValoper[delegation.delegation.validatorAddress].tokens * +option.weight) /
+                1000000 +
+              CSV_SEPARATOR +
               (validatorsByValoper[delegation.delegation.validatorAddress].status ==
               BondStatus.BOND_STATUS_BONDED
                 ? "Active"
@@ -76,7 +107,12 @@ const displayVotesForPropSlow = async (
               CSV_SEPARATOR +
               (+delegation.balance.amount * +option.weight) / 1000000 +
               CSV_SEPARATOR +
-              displayVoteOption(option.option)
+              displayVoteOption(option.option) +
+              CSV_SEPARATOR +
+              (vote.voter.substring(7, 7 + 32) ===
+              delegation.delegation.validatorAddress.substring(14, 14 + 32)
+                ? "Yes"
+                : "No")
           )
         }
       }
