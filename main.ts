@@ -35,12 +35,12 @@ const runAll = async (type: "fast" | "slow"): Promise<void> => {
     result = await Promise.all(ids.map((id) => displayVotesForPropSlow(id, undefined, validatorsByValoper)))
   }
 
-  console.error(result)
+  console.log(result)
 }
 
 const displayCSVHeaderSlow = async (splitByValidator: boolean) => {
   if (splitByValidator) {
-    console.log(
+    console.error(
       "Prop ID" +
         CSV_SEPARATOR +
         "Delegator" +
@@ -80,15 +80,15 @@ const displayVotesForPropSlow = async (
     if (validatorsByValoper) {
       for (const delegation of delegations) {
         if (!(delegation.delegation.validatorAddress in validatorsByValoper)) {
-          console.error("Error: Cannot find validator: " + delegation.delegation.validatorAddress)
+          console.log("Error: Cannot find validator: " + delegation.delegation.validatorAddress)
           continue
         }
 
         for (const option of vote.options) {
           if (+option.weight < 1) {
-            console.error("Weighted vote: " + vote.voter + ". Weight: " + option.weight)
+            console.log("Weighted vote: " + vote.voter + ". Weight: " + option.weight)
           }
-          console.log(
+          console.error(
             id +
               CSV_SEPARATOR +
               vote.voter +
@@ -123,7 +123,7 @@ const displayVotesForPropSlow = async (
       }
 
       for (const option of vote.options) {
-        console.log(
+        console.error(
           id +
             CSV_SEPARATOR +
             vote.voter +
@@ -183,7 +183,7 @@ const displayVotesForPropFast = async (
   let counter = 1
   for (const vote of votes) {
     if (!(vote.voter in delegationsByDelegator)) {
-      console.error("Error: cannot find delegation of voter: " + vote.voter)
+      console.log("Error: cannot find delegation of voter: " + vote.voter)
       continue
     }
 
@@ -198,7 +198,7 @@ const displayVotesForPropFast = async (
 
     for (const option of vote.options) {
       if (total > 0) {
-        console.log(
+        console.error(
           id +
             CSV_SEPARATOR +
             vote.voter +
